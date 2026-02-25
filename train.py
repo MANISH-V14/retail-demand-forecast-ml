@@ -1,60 +1,56 @@
 import pandas as pd
 import numpy as np
 import os
-from sklearn.metrics import mean_absolute_error, mean_squared_error
-from sklearn.ensemble import RandomForestRegressor
 import joblib
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.metrics import mean_absolute_error
+from sklearn.model_selection import train_test_split
 
-# Tuned Parameters
-BEST_PARAMS = {
-    "n_estimators": 400,
-    "max_depth": 10,
-    "min_samples_split": 2,
-    "min_samples_leaf": 1,
-    "random_state": 42
-}
+def run_training():
 
-# Load processed data
-df = pd.read_csv("data/processed/processed_data.csv")
+    os.makedirs("models", exist_ok=True)
 
-os.makedirs("models", exist_ok=True)
+    df = pd.read_csv("data/processed/processed_data.csv")
 
-store_results = []
+    performance_list = []
 
-for store_id in sorted(df["Store"].unique()):
-    df_store = df[df["Store"] == store_id].copy()
+    for store in df["Store"].unique():
 
-    X = df_store.drop(columns=["Weekly_Sales", "Date", "Store"])
-    y = df_store["Weekly_Sales"]
+        df_store = df[df["Store"] == store].copy()
 
-    split_index = int(len(df_store) * 0.8)
-    X_train, X_test = X[:split_index], X[split_index:]
-    y_train, y_test = y[:split_index], y[split_index:]
+        X = df_store.drop(columns=["Weekly_Sales", "Date", "Store"])
+        y = df_store["Weekly_Sales"]
 
-    model = RandomForestRegressor(**BEST_PARAMS)
-    model.fit(X_train, y_train)
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, test_size=0.2, shuffle=False
+        )
 
-    preds = model.predict(X_test)
+        model = RandomForestRegressor(
+            n_estimators=400,
+            max_depth=10,
+            min_samples_split=2,
+            min_samples_leaf=1,
+            random_state=42
+        )
 
-    mae = mean_absolute_error(y_test, preds)
-    rmse = np.sqrt(mean_squared_error(y_test, preds))
-    mape = np.mean(np.abs((y_test - preds) / y_test)) * 100
+        model.fit(X_train, y_train)
 
-    store_results.append({
-        "Store": store_id,
-        "MAE": mae,
-        "RMSE": rmse,
-        "MAPE": mape
-    })
+        preds = model.predict(X_test)
 
-    joblib.dump(model, f"models/store_{store_id}_model.pkl")
+        mae = mean_absolute_error(y_test, preds)
 
-    print(f"Store {store_id} trained | MAE: {mae:.2f} | MAPE: {mape:.2f}%")
+        performance_list.append({
+            "Store": store,
+            "MAE": mae
+        })
 
-results_df = pd.DataFrame(store_results)
-results_df.to_csv("models/model_performance_summary.csv", index=False)
+        joblib.dump(model, f"models/store_{store}_model.pkl")
 
-print("\nAll models retrained with tuned parameters.")
+    performance_df = pd.DataFrame(performance_list)
+    performance_df.to_csv("models/model_performance_summary.csv", index=False)
+
+    print("Training complete.")
+
 
 if __name__ == "__main__":
     run_training()

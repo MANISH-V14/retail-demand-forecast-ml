@@ -5,7 +5,9 @@ import joblib
 import matplotlib.pyplot as plt
 from datetime import timedelta
 import os
+from train import run_training
 import subprocess
+
 
 # -------------------------------------------------
 # PAGE CONFIG FIRST (Must be first Streamlit call)
@@ -21,7 +23,7 @@ st.markdown("Multi-store ML forecasting system using Random Forest models.")
 df = pd.read_csv("data/processed/processed_data.csv")
 df["Date"] = pd.to_datetime(df["Date"])
 
-from train import run_training
+
 
 if not os.path.exists("models/model_performance_summary.csv"):
     st.warning("Models not found. Training models now...")

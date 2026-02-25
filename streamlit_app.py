@@ -19,6 +19,12 @@ st.markdown("Multi-store ML forecasting system using Random Forest models.")
 df = pd.read_csv("data/processed/processed_data.csv")
 df["Date"] = pd.to_datetime(df["Date"])
 
+import subprocess
+
+if not os.path.exists("models/model_performance_summary.csv"):
+    st.warning("Models not found. Training models now...")
+    subprocess.run(["python", "train.py"])
+
 performance_df = pd.read_csv("models/model_performance_summary.csv")
 
 import os

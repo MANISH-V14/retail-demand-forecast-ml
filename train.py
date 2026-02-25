@@ -55,3 +55,6 @@ results_df = pd.DataFrame(store_results)
 results_df.to_csv("models/model_performance_summary.csv", index=False)
 
 print("\nAll models retrained with tuned parameters.")
+
+if __name__ == "__main__":
+    run_training()

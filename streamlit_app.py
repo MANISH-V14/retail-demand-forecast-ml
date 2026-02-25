@@ -4,6 +4,8 @@ import numpy as np
 import joblib
 import matplotlib.pyplot as plt
 from datetime import timedelta
+import os
+import subprocess
 
 # -------------------------------------------------
 # PAGE CONFIG FIRST (Must be first Streamlit call)

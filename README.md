@@ -6,6 +6,8 @@ End-to-end multi-store demand forecasting system using machine learning.
 
 This project builds 45 independent time-series forecasting models to predict weekly retail sales for Walmart stores.
 
+project live url: https://retail-demand-forecast-ml-7bska8u5rzhxx9drjv63jm.streamlit.app/
+
 Features:
 - Store-level forecasting
 - Hyperparameter tuning using TimeSeriesSplit

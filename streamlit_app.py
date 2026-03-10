@@ -31,6 +31,9 @@ if not os.path.exists("models/model_performance_summary.csv"):
 
 performance_df = pd.read_csv("models/model_performance_summary.csv")
 
+st.write("Columns:", performance_df.columns)
+st.write(performance_df.head())
+
 import os
 from sklearn.ensemble import RandomForestRegressor
 
@@ -72,7 +75,10 @@ def categorize(mape):
     else:
         return "Needs Improvement"
 
-performance_df["Category"] = performance_df["MAPE"].apply(categorize)
+if "MAPE" not in performance_df.columns:
+    st.error("MAPE column not found in performance summary.")
+    st.write(performance_df.head())
+    st.stop()
 
 # -------------------------------------------------
 # GLOBAL KPI
@@ -170,20 +176,22 @@ lag_12 = df_store.iloc[-12]["Weekly_Sales"]
 for i in range(forecast_weeks):
     current_date += timedelta(weeks=1)
 
-    features = np.array([[
-        last_row["IsHoliday"],
-        last_row["Temperature"],
-        last_row["Fuel_Price"],
-        last_row["CPI"],
-        last_row["Unemployment"],
-        current_date.year,
-        current_date.month,
-        current_date.isocalendar()[1],
-        lag_1,
-        lag_4,
-        lag_12
-    ]])
+    features = pd.DataFrame([{
+        "IsHoliday": last_row["IsHoliday"],
+        "Temperature": last_row["Temperature"],
+        "Fuel_Price": last_row["Fuel_Price"],
+        "CPI": last_row["CPI"],
+        "Unemployment": last_row["Unemployment"],
+        "Year": current_date.year,
+        "Month": current_date.month,
+        "Week": current_date.isocalendar()[1],
+        "Lag_1": lag_1,
+        "Lag_4": lag_4,
+        "Lag_12": lag_12
+    }])
 
+    
+    
     prediction = model.predict(features)[0]
 
     forecast_data.append((current_date, prediction))

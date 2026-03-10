@@ -3,13 +3,15 @@ import numpy as np
 import os
 import joblib
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.metrics import mean_absolute_error
+from sklearn.metrics import mean_absolute_error, mean_squared_error
 from sklearn.model_selection import train_test_split
+
 
 def run_training():
 
     os.makedirs("models", exist_ok=True)
 
+    # LOAD DATA
     df = pd.read_csv("data/processed/processed_data.csv")
 
     performance_list = []
@@ -38,10 +40,14 @@ def run_training():
         preds = model.predict(X_test)
 
         mae = mean_absolute_error(y_test, preds)
+        rmse = np.sqrt(mean_squared_error(y_test, preds))
+        mape = np.mean(np.abs((y_test - preds) / y_test)) * 100
 
         performance_list.append({
             "Store": store,
-            "MAE": mae
+            "MAE": mae,
+            "RMSE": rmse,
+            "MAPE": mape
         })
 
         joblib.dump(model, f"models/store_{store}_model.pkl")

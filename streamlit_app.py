@@ -29,10 +29,19 @@ if not os.path.exists("models/model_performance_summary.csv"):
     st.warning("Models not found. Training models now...")
     run_training()
 
-performance_df = pd.read_csv("models/model_performance_summary.csv")
+performance_path = "models/model_performance_summary.csv"
 
-st.write("Columns:", performance_df.columns)
-st.write(performance_df.head())
+if not os.path.exists(performance_path):
+    st.warning("Performance summary missing. Training models...")
+    run_training()
+
+performance_df = pd.read_csv(performance_path)
+
+# If MAPE column missing (old file), retrain
+if "MAPE" not in performance_df.columns:
+    st.warning("Old performance file detected. Retraining models...")
+    run_training()
+    performance_df = pd.read_csv(performance_path)
 
 import os
 from sklearn.ensemble import RandomForestRegressor

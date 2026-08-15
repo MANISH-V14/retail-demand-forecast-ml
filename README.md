@@ -1,57 +1,64 @@
-# 📊 Retail Store Sales Forecasting Platform
+# Retail Store Sales Forecasting Platform
 
-End-to-end multi-store demand forecasting system using machine learning.
+An end-to-end multi-store demand forecasting project that predicts weekly retail sales and exposes the results through an interactive Streamlit dashboard.
 
-## 🔍 Overview
+## Live Demo
 
-This project builds 45 independent time-series forecasting models to predict weekly retail sales for Walmart stores.
+**Streamlit app:** https://retail-demand-forecast-ml-7bska8u5rzhxx9drjv63jm.streamlit.app/
 
-project live url: https://retail-demand-forecast-ml-7bska8u5rzhxx9drjv63jm.streamlit.app/
+## Overview
 
-Features:
-- Store-level forecasting
-- Hyperparameter tuning using TimeSeriesSplit
-- Feature engineering with lag variables
-- Macroeconomic and holiday signals
-- Model evaluation (MAE, RMSE, MAPE)
-- Performance categorization
+The project builds independent time-series forecasting models for 45 Walmart stores. It combines historical sales with lag, holiday, and macroeconomic signals to estimate future weekly demand.
+
+### Key Capabilities
+
+- Store-level sales forecasting
+- Lag-based feature engineering
+- Time-aware cross-validation with `TimeSeriesSplit`
+- Random Forest hyperparameter tuning
+- MAE, RMSE, and MAPE evaluation
+- Performance comparison across stores
 - Feature importance analysis
-- Heatmap visualization
-- Downloadable forecasts
+- Interactive forecast visualizations
+- Downloadable forecast results
 
-## 🧠 Modeling Strategy
+## Modeling Strategy
 
-- Aggregated department sales into total weekly store sales
-- Created lag features (1, 4, 12 weeks)
-- Time-aware cross-validation
-- Tuned RandomForest hyperparameters
-- Trained separate model per store
+1. Aggregate department-level sales into weekly store-level totals.
+2. Create lag features for 1, 4, and 12 weeks.
+3. Include available holiday and macroeconomic signals.
+4. Use time-aware cross-validation to avoid leakage from future observations.
+5. Tune Random Forest parameters and train a separate model for each store.
+6. Evaluate each store using MAE, RMSE, and MAPE.
 
-## 📊 Results
+## Results
 
-- Most stores achieved 2%–6% MAPE
-- Some stores showed structural volatility (e.g., Store 14)
-- Lag features were strongest predictors globally
+- Most stores achieved approximately 2% to 6% MAPE in the reported evaluation.
+- Some stores, including Store 14, showed greater structural volatility.
+- Lag features were among the strongest predictors across the models.
 
-## 🚀 Dashboard
+## Interactive Dashboard
 
-Interactive Streamlit dashboard allows:
+The Streamlit dashboard supports:
 
 - Store selection
-- Backtest visualization
-- Forecast next N weeks
+- Historical backtest visualization
+- Forecasting the next N weeks
 - Performance comparison across stores
 - Global feature importance analysis
+- Forecast downloads
 
-## 🛠 Tech Stack
+## Tech Stack
 
-Python  
-Pandas  
-Scikit-learn  
-RandomForest  
-TimeSeriesSplit  
-Streamlit  
-Matplotlib  
-Seaborn  
+- Python
+- Pandas
+- Scikit-learn
+- Random Forest
+- TimeSeriesSplit
+- Streamlit
+- Matplotlib
+- Seaborn
 
-## ▶ Run Locally
+## What This Project Demonstrates
+
+This project focuses on practical forecasting rather than a single global accuracy number. Training and evaluating models at the store level makes it easier to identify locations with stable demand as well as stores where additional features or a different modeling strategy may be needed.
